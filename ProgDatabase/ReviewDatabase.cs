@@ -9,7 +9,7 @@ namespace ProgDatabase
     class ReviewDatabase
     {
         private List<Review> _reviews;
-        public ReviewDatabase() {
+        public ReviewDatabase() { 
             _reviews = new List<Review>();
         }
         public void AddReview(Review reviewToAdd) {

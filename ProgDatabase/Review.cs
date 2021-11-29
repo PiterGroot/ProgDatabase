@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace ProgDatabase
 {
-    class Review
+    public abstract class Review
     {
-        public string value, message;
-        public Review(string value, string message) {
-            this.value = value;
-            this.message = message;
+        public string Value { get; private set; }
+        public string Message { get; private set; }
+        public abstract void SetGoldenReview();
+
+        protected Review(string value, string message) {
+            this.Value = value;
+            this.Message = message;
         }
     }
 }
