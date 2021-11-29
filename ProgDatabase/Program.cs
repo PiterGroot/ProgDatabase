@@ -20,13 +20,13 @@ namespace ProgDatabase
                 if (review.Value == "GOLDEN") {
                     review.SetGoldenReview();
                 }
-                else {
-                    database.AddReview(review);
-                }
+                database.AddReview(review);
             }
             
             foreach (Review review in database.GetAllReviews()) {
-                Console.WriteLine("Review is:" + " " + review.Value + "; " + review.Message);
+                if(review.isGolden == false) {
+                    Console.WriteLine("Review is:" + " " + review.Value + "; " + review.Message);
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ namespace ProgDatabase
         }
         public override void SetGoldenReview() {
             Console.WriteLine($"'{Message}' Review is golden!");
+            base.isGolden = true;
         }
     }
 }
