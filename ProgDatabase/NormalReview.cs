@@ -9,12 +9,13 @@ namespace ProgDatabase
     class NormalReview : Review
     {
         public NormalReview(string value, string message) : base(value, message) {
+            //om errors te voorkomen
             if(value == "GOLDEN") {
                 base.error = true;
             }
         }
-        public override void SetGoldenReview() {
-            
+        public override string GetReviewID() {
+            return base.reviewID;
         }
     }
 }

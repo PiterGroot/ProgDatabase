@@ -10,9 +10,11 @@ namespace ProgDatabase
     {
         public bool error;
         public bool isGolden;
+        public string reviewID = string.Empty;
         public string Value { get; private set; }
         public string Message { get; private set; }
-        public abstract void SetGoldenReview();
+        //public abstract void SetGoldenReview();
+        public abstract string GetReviewID();
 
         protected Review(string value, string message) {
             this.Value = value;

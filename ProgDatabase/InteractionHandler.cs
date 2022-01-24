@@ -14,6 +14,8 @@ namespace ProgDatabase {
         public List<Review> mixedReviews = new List<Review>();
         public List<Review> goldenReviews = new List<Review>();
 
+        public static string commands = "Available commands: 'printAll' 'reviewTypes' 'print{reviewType}' 'add{reviewType} message' 'reviewIDs' 'exit' 'ENTER'";
+
         //handles every command and response
         public void HandleInput() {
             Console.Write("~ ");
@@ -45,16 +47,20 @@ namespace ProgDatabase {
                     Program.SetConsoleTitle("ReviewTypes:");
                     Console.WriteLine("Review types are: Positive, Mixed, Negative & Golden");
                     break;
+                case "reviewIDs":
+                    Program.SetConsoleTitle("Review IDS");
+                    Program.PrintAllReviewIDs(database);
+                    break;
                 case "exit":
                     Environment.Exit(0);
                     break;
                 case "":
                     Program.SetConsoleTitle("Home: ");
-                    Console.WriteLine("Available commands: 'printAll' 'reviewTypes' 'print{reviewType}' 'add{reviewType} message' 'exit' 'ENTER'");
+                    Console.WriteLine(commands);
                     break;
                 default:
                     if(words.Length < 2) {
-                        Console.WriteLine("Available commands: 'printAll' 'reviewTypes' 'print{reviewType}' 'add{reviewType} message' 'exit' 'ENTER'");
+                        Console.WriteLine(commands);
                         Console.WriteLine($"'{command}' doesnt exists?");
                     }
                     break;

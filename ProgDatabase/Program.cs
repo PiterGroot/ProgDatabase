@@ -14,25 +14,11 @@ namespace ProgDatabase
 
         static void Main(string[] args) {
             ReviewDatabase dataBase = new ReviewDatabase();
-            List<Review> reviewsToAdd = new List<Review>();
             InteractionHandler interactions = new InteractionHandler();
 
             SetConsoleTitle("Home:");
 
-            //creating reviews
-            reviewsToAdd.Add(new GoldenReview("GOLDEN", "BEST GAME I HAVE EVER PLAYED"));
-            reviewsToAdd.Add(new GoldenReview("GOLDEN", "THIS GAME DESERVES GAME OF THE YEAR AWARD"));
-            reviewsToAdd.Add(new NormalReview("Positive", "Very good game, I like the story"));
-            reviewsToAdd.Add(new NormalReview("Positive", "Hahaha one the funniest games I have ever played!"));
-            reviewsToAdd.Add(new NormalReview("Positive", "I finally had some spare time to play this game, and im not disappointed"));
-            reviewsToAdd.Add(new NormalReview("Negative", "The game is to hard and you can't change the controls"));
-            reviewsToAdd.Add(new NormalReview("Negative", "The community is so toxic omg, instant uninstall"));
-            reviewsToAdd.Add(new NormalReview("Mixed", "The game is okay. Not bad not good"));
-            reviewsToAdd.Add(new NormalReview("Mixed", "I couldn't connect my xbox controller"));
-            reviewsToAdd.Add(new NormalReview("Mixed", "The server keeps on crashing? Gameplay is fun though"));
-
-            SortAllReviews(dataBase, reviewsToAdd, true);
-            Console.WriteLine("Available commands: 'printAll' 'reviewTypes' 'print{reviewType}' 'add{reviewType} message' 'exit' 'ENTER'");
+            Console.WriteLine(InteractionHandler.commands);
 
             //setting up values
             interactions.database = dataBase;
@@ -89,7 +75,6 @@ namespace ProgDatabase
             foreach (Review review in reviewsToAdd) {
                 switch (review.Value) {
                     case "GOLDEN":
-                        review.SetGoldenReview();
                         goldenReviews.Add(review);
                         break;
                     case "Positive":
@@ -101,6 +86,16 @@ namespace ProgDatabase
                     case "Negative":
                         negativeReviews.Add(review);
                         break;
+                }
+                if(review.GetReviewID() == string.Empty) {
+                    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                    var stringChars = new char[15];
+                    var random = new Random();
+
+                    for (int i = 0; i < stringChars.Length; i++) {
+                        stringChars[i] = chars[random.Next(chars.Length)];
+                    }
+                    review.reviewID = new string(stringChars);
                 }
                 if (addToDataBase) {
                     dataBase.AddReview(review);
@@ -137,6 +132,11 @@ namespace ProgDatabase
             PrintAllReviews(database);
         }
 
+        public static void PrintAllReviewIDs(ReviewDatabase database) {
+            foreach (Review review in database.GetAllReviews()) {
+                Console.WriteLine(review.GetReviewID());
+            }
+        }
         //sets the console titile
         public static void SetConsoleTitle(string message) {
             Console.Title = message;
