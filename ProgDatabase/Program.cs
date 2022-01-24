@@ -1,72 +1,145 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 namespace ProgDatabase
 {
     class Program
     {
-        public static ReviewDatabase _database = new ReviewDatabase();
+        public static List<Review> positiveReviews = new List<Review>();
+        public static List<Review> negativeReviews = new List<Review>();
+        public static List<Review> mixedReviews = new List<Review>();
+        public static List<Review> goldenReviews = new List<Review>();
+
         static void Main(string[] args) {
+            ReviewDatabase dataBase = new ReviewDatabase();
             List<Review> reviewsToAdd = new List<Review>();
-            ReviewDatabase database = new ReviewDatabase();
+            InteractionHandler interactions = new InteractionHandler();
 
-            reviewsToAdd.Add(new GoldenReview("GOLDEN", "GOLDEN REVIEEEEEWWWWWW"));
+            SetConsoleTitle("Home:");
+
+            //creating reviews
+            reviewsToAdd.Add(new GoldenReview("GOLDEN", "BEST GAME I HAVE EVER PLAYED"));
+            reviewsToAdd.Add(new GoldenReview("GOLDEN", "THIS GAME DESERVES GAME OF THE YEAR AWARD"));
             reviewsToAdd.Add(new NormalReview("Positive", "Very good game, I like the story"));
+            reviewsToAdd.Add(new NormalReview("Positive", "Hahaha one the funniest games I have ever played!"));
+            reviewsToAdd.Add(new NormalReview("Positive", "I finally had some spare time to play this game, and im not disappointed"));
             reviewsToAdd.Add(new NormalReview("Negative", "The game is to hard and you can't change the controls"));
+            reviewsToAdd.Add(new NormalReview("Negative", "The community is so toxic omg, instant uninstall"));
             reviewsToAdd.Add(new NormalReview("Mixed", "The game is okay. Not bad not good"));
-            
-            foreach (Review review in reviewsToAdd) {
-                if (review.Value == "GOLDEN") {
-                    review.SetGoldenReview();
-                }
-                database.AddReview(review);
-            }
-            
-            foreach (Review review in database.GetAllReviews()) {
-                if(review.isGolden == false) {
-                    Console.WriteLine("Review is:" + " " + review.Value + "; " + review.Message);
-                }
-            }
-            _database = database;
+            reviewsToAdd.Add(new NormalReview("Mixed", "I couldn't connect my xbox controller"));
+            reviewsToAdd.Add(new NormalReview("Mixed", "The server keeps on crashing? Gameplay is fun though"));
+
+            SortAllReviews(dataBase, reviewsToAdd, true);
+            Console.WriteLine("Available commands: 'printAll' 'reviewTypes' 'print{reviewType}' 'add{reviewType} message' 'exit' 'ENTER'");
+
+            //setting up values
+            interactions.database = dataBase;
+            interactions.positiveReviews = positiveReviews;
+            interactions.negativeReviews = negativeReviews;
+            interactions.mixedReviews = mixedReviews;
+            interactions.goldenReviews = goldenReviews;
+
+            //handle input commands
             while (true) {
-                CheckInput();
+                interactions.HandleInput();
             }
         }
-
-        private static void CheckInput() {
-            Console.WriteLine("/-");
-            string input = Console.ReadLine();
-            string[] words = input.Split(' ');
-            if (words[0] == "addPositive") {
-                string[] message = new string[words.Length];
-                string testmessage = string.Empty;
-                for (int i = 1; i < words.Length; i++) {
-                    testmessage += " " + words[i];
+        //prints every review in the console
+        public static void PrintAllReviews(ReviewDatabase dataBase) {
+            bool clearScreen = false;
+            foreach (Review review in dataBase.GetAllReviews()) {
+                if (review.isGolden == false) {
+                    Console.WriteLine(review.Value + " review" + "; " + review.Message);
                 }
-                AddReview("positive", testmessage);
+                else {
+                    Console.WriteLine("GOLDEN REVIEW!" + "; " + review.Message);
+                }
+                if (review.error) {
+                    clearScreen = true;
+                }
             }
-            switch (input) {
-                case "printAll":
-                    Console.Clear();
-                    foreach (Review review in _database.GetAllReviews()) {
-                        if (review.isGolden == false) {
-                            Console.WriteLine("Review is:" + " " + review.Value + ";" + review.Message);
-                        }
-                    }
-                    break;
+            if (clearScreen) {
+                Console.Clear();
+                Console.WriteLine("ERROR, please only use 'GOLDEN' value with GoldenReview class");
             }
         }
-
-        private static void AddReview(string reviewType, string message) {
-            string unpackedMessage = string.Empty;
+        //prints every specific review in the console
+        public static void PrintSpecificReviews(List<Review> typeOfReview) {
+            bool clearScreen = false;
+            foreach (Review review in typeOfReview) {
+                if (review.isGolden == false) {
+                    Console.WriteLine(review.Value + " review" + "; " + review.Message);
+                }
+                else {
+                    Console.WriteLine("GOLDEN REVIEW!" + "; " + review.Message);
+                }
+                if (review.error) {
+                    clearScreen = true;
+                }
+            }
+            if (clearScreen) {
+                Console.Clear();
+                Console.WriteLine("ERROR, please only use 'GOLDEN' value with GoldenReview class");
+            }
+        }
+        //sorts all reviews in their own lists and adds them to the database
+        public static void SortAllReviews(ReviewDatabase dataBase, List<Review> reviewsToAdd, bool addToDataBase) {
+            foreach (Review review in reviewsToAdd) {
+                switch (review.Value) {
+                    case "GOLDEN":
+                        review.SetGoldenReview();
+                        goldenReviews.Add(review);
+                        break;
+                    case "Positive":
+                        positiveReviews.Add(review);
+                        break;
+                    case "Mixed":
+                        mixedReviews.Add(review);
+                        break;
+                    case "Negative":
+                        negativeReviews.Add(review);
+                        break;
+                }
+                if (addToDataBase) {
+                    dataBase.AddReview(review);
+                }
+            }
+        }
+        //adds a review inside the console at runtime
+        public static void AddReview(string reviewType, string message, ReviewDatabase database) {
+            List<Review> addedReview = new List<Review>();
+            
             switch (reviewType) {
                 case "positive":
-                    Review review = new NormalReview("Positive", message);
-                    _database.AddReview(review);
+                    Review posReview = new NormalReview("Positive", message);
+                    addedReview.Add(posReview);
+                    database.AddReview(posReview);
+                    break;
+                case "mixed":
+                    Review mixReview = new NormalReview("Mixed", message);
+                    addedReview.Add(mixReview);
+                    database.AddReview(mixReview);
+                    break;
+                case "negative":
+                    Review negReview = new NormalReview("Negative", message);
+                    addedReview.Add(negReview);
+                    database.AddReview(negReview);
+                    break;
+                case "golden":
+                    Review goldReview = new GoldenReview("GOLDEN", message);
+                    addedReview.Add(goldReview);
+                    database.AddReview(goldReview);
                     break;
             }
+            SortAllReviews(database, addedReview, false);
+            PrintAllReviews(database);
+        }
+
+        //sets the console titile
+        public static void SetConsoleTitle(string message) {
+            Console.Title = message;
         }
     }
 }

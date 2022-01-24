@@ -1,8 +1,14 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace ProgDatabase
 {
     public abstract class Review
     {
+        public bool error;
         public bool isGolden;
         public string Value { get; private set; }
         public string Message { get; private set; }
@@ -12,5 +18,6 @@ namespace ProgDatabase
             this.Value = value;
             this.Message = message;
         }
+
     }
 }
