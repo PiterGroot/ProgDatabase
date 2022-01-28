@@ -12,7 +12,7 @@ namespace ProgDatabase
         public ReviewDatabase() { 
             _reviews = new List<Review>();
         }
-        public void AddReview(Review reviewToAdd) {
+        public void AddReviewToDataBase(Review reviewToAdd) {
             _reviews.Add(reviewToAdd);
         }
         public List<Review> GetAllReviews() {

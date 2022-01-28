@@ -98,7 +98,7 @@ namespace ProgDatabase
                     review.reviewID = new string(stringChars);
                 }
                 if (addToDataBase) {
-                    dataBase.AddReview(review);
+                    dataBase.AddReviewToDataBase(review);
                 }
             }
         }
@@ -110,22 +110,22 @@ namespace ProgDatabase
                 case "positive":
                     Review posReview = new NormalReview("Positive", message);
                     addedReview.Add(posReview);
-                    database.AddReview(posReview);
+                    database.AddReviewToDataBase(posReview);
                     break;
                 case "mixed":
                     Review mixReview = new NormalReview("Mixed", message);
                     addedReview.Add(mixReview);
-                    database.AddReview(mixReview);
+                    database.AddReviewToDataBase(mixReview);
                     break;
                 case "negative":
                     Review negReview = new NormalReview("Negative", message);
                     addedReview.Add(negReview);
-                    database.AddReview(negReview);
+                    database.AddReviewToDataBase(negReview);
                     break;
                 case "golden":
                     Review goldReview = new GoldenReview("GOLDEN", message);
                     addedReview.Add(goldReview);
-                    database.AddReview(goldReview);
+                    database.AddReviewToDataBase(goldReview);
                     break;
             }
             SortAllReviews(database, addedReview, false);
