@@ -14,7 +14,17 @@ namespace ProgDatabase {
         public List<Review> mixedReviews = new List<Review>();
         public List<Review> goldenReviews = new List<Review>();
 
-        public static string commands = "Available commands: 'printAll' 'reviewTypes' 'print{reviewType}' 'add{reviewType} message' 'reviewIDs' 'exit' 'ENTER'";
+        public static string commands = "Available commands: 'printAll' 'reviewTypes' 'print{reviewType}' 'add{reviewType} message' 'reviewIDs' 'ENTER' 'exit'";
+
+        public InteractionHandler(ReviewDatabase database, List<Review> posReviews, List<Review> mixReviews, List<Review> negReviews, List<Review> goldReviews) {
+            this.database = database;
+            this.positiveReviews = posReviews;
+            this.negativeReviews = negReviews;
+            this.mixedReviews = mixReviews;
+            this.goldenReviews = goldReviews;
+
+            database.SetUp(posReviews, mixReviews, negReviews, goldReviews);
+        }
 
         //handles every command and response
         public void HandleInput() {
@@ -25,23 +35,23 @@ namespace ProgDatabase {
             switch (command) {
                 case "printAll":
                     Program.SetConsoleTitle("All reviews:");
-                    Program.PrintAllReviews(database);
+                    ReviewDatabase.PrintAllReviews(database);
                     break;
                 case "printPositive":
                     Program.SetConsoleTitle("Positive reviews:");
-                    Program.PrintSpecificReviews(positiveReviews);
+                    ReviewDatabase.PrintSpecificReviews(positiveReviews);
                     break;
                 case "printMixed":
                     Program.SetConsoleTitle("Mixed reviews:");
-                    Program.PrintSpecificReviews(mixedReviews);
+                    ReviewDatabase.PrintSpecificReviews(mixedReviews);
                     break;
                 case "printNegative":
                     Program.SetConsoleTitle("Negative reviews:");
-                    Program.PrintSpecificReviews(negativeReviews);
+                    ReviewDatabase.PrintSpecificReviews(negativeReviews);
                     break;
                 case "printGolden":
                     Program.SetConsoleTitle("Golden reviews:");
-                    Program.PrintSpecificReviews(goldenReviews);
+                    ReviewDatabase.PrintSpecificReviews(goldenReviews);
                     break;
                 case "reviewTypes":
                     Program.SetConsoleTitle("ReviewTypes:");
@@ -49,7 +59,7 @@ namespace ProgDatabase {
                     break;
                 case "reviewIDs":
                     Program.SetConsoleTitle("Review IDS");
-                    Program.PrintAllReviewIDs(database);
+                    ReviewDatabase.PrintAllReviewIDs(database);
                     break;
                 case "exit":
                     Environment.Exit(0);
@@ -67,19 +77,20 @@ namespace ProgDatabase {
             }
             //seperate check for adding reviews inside the console
             if (words[0] == "addPositive") {
-                Program.AddReview("positive", PackAddedMessage(words), database);
+                ReviewDatabase.AddReview("positive", PackAddedMessage(words), database);
             }
             else if (words[0] == "addMixed") {
-                Program.AddReview("mixed", PackAddedMessage(words), database);
+                ReviewDatabase.AddReview("mixed", PackAddedMessage(words), database);
             }
             else if (words[0] == "addNegative") {
-                Program.AddReview("negative", PackAddedMessage(words), database);
+                ReviewDatabase.AddReview("negative", PackAddedMessage(words), database);
             }
             else if (words[0] == "addGolden") {
-                Program.AddReview("golden", PackAddedMessage(words), database);
+                ReviewDatabase.AddReview("golden", PackAddedMessage(words), database);
             }
         }
 
+        //add spaces between the words
         private string PackAddedMessage(string[] commandWords) {
             string reviewMessage = string.Empty;
             for (int i = 1; i < commandWords.Length; i++) {
